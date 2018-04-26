@@ -1,0 +1,37 @@
+version: '2'
+services:
+  service-a:
+    build: serviceA
+    environment:
+      - SERVICEB_HOST=service-b
+      - SERVICEB_PORT=3000
+      - PORT=3000
+    ports:
+      - "8080:3000"
+    networks:
+      - mynetwork
+    depends_on:
+      - service-b
+  service-b:
+    build: serviceB
+    networks:
+      - mynetwork
+    ports:
+      - 3000
+    environment:
+      - WAIT=10000
+      - PORT=3000
+  benchmark:
+    build: benchmark
+    networks:
+      - mynetwork
+    environment:
+      - SERVICEA_HOST=service-a
+      - SERVICEA_PORT=3000
+      - CONCURRENCY=5000
+      - REQUESTS=5000
+    depends_on:
+      - service-a
+networks:
+  mynetwork:
+    driver: bridge

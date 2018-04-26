@@ -1,0 +1,7 @@
+#!/bin/sh
+
+COMMAND="ab -n ${REQUESTS} -c ${CONCURRENCY} http://${SERVICEA_HOST}:${SERVICEA_PORT}/"
+
+echo $COMMAND
+
+/wait-for ${SERVICEA_HOST}:${SERVICEA_PORT} -- $COMMAND
